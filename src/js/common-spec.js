@@ -1,7 +1,10 @@
+import Toastify from "toastify-js";
+import "toastify-js/src/toastify.css";
+
 const errorCodes = {
   QUOTA_EXCEEDED_ERR: 22,
   QUOTA_EXCEEDED_ERR2: 1014,
-}
+};
 
 // JsDocs
 /**
@@ -34,25 +37,25 @@ const tryCatch = (callbackFunction) => {
   try {
     callbackFunction();
   } catch (error) {
-    if (error.code === errorCodes.QUOTA_EXCEEDED_ERR || error.code === errorCodes.QUOTA_EXCEEDED_ERR2) {
-      showAlert(3,"LocalStorage has exceeded the maximum size!")
-      console.log("Quota Exceeded");
-    } else {
-      console.log("error code: ", error.code, "error message: ", error);
-    }
+    console.log("error code: ", error.code, "error message: ", error);
   } finally {
     // console.log("finally");
   }
 };
 
 const setStorage = (key, value) => {
-  tryCatch(() => {
-    localStorage.setItem(
-      key,
-      JSON.stringify({
-        data: value,
-      })
-    );
+  return new Promise((resolve, reject) => {
+    try {
+      localStorage.setItem(
+        key,
+        JSON.stringify({
+          data: value,
+        })
+      );
+      resolve("Ok");
+    } catch {
+      reject("Failed");
+    }
   });
 };
 
@@ -160,9 +163,7 @@ const loadImage = (event, imgElementPara) => {
   });
 };
 
-
 const showAlert = (type, message) => {
-  
   const alertTypes = [
     "alert-primary",
     "alert-success",
@@ -201,6 +202,26 @@ const showAlert = (type, message) => {
   }, 5000);
 };
 
+const showToast = (type, message) => {
+  const bgColors = [
+    "linear-gradient(to right, #007bff, #6c757d)",
+    "linear-gradient(to right, #28a745, #6c757d)",
+    "linear-gradient(to right, #ffc107, #6c757d)",
+    "linear-gradient(to right, #dc3545, #6c757d)",
+    "linear-gradient(to right, #17a2b8, #6c757d)",
+  ];
+
+  Toastify({
+    text: message,
+    duration: 5000,
+    close: true,
+    gravity: "top",
+    position: "center",
+    style: {
+      background: bgColors[type],
+    },
+  }).showToast();
+};
 
 export {
   el,
@@ -211,5 +232,6 @@ export {
   renderHtml,
   updateHtml,
   loadImage,
-  showAlert
+  showAlert,
+  showToast,
 };

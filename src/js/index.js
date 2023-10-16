@@ -6,13 +6,24 @@ import "../css/spinner.css";
 import "../css/style.css";
 import "./common.js";
 
-import { el, setStorage, renderHtml, loadImage } from "./common-spec.js";
+import {
+  el,
+  setStorage,
+  renderHtml,
+  loadImage,
+  showToast,
+} from "./common-spec.js";
 import {
   fetchPosts,
   getPosts,
   renderPosts,
   btnValue,
 } from "./posts-functions.js";
+
+import AOS from "aos";
+import "aos/dist/aos.css";
+
+AOS.init();
 
 const bodyTitle = `
     <section>
@@ -66,7 +77,12 @@ el("#productImagePath").addEventListener("change", async (event) => {
     let prevImage = el("#previewProductImage");
     allPosts[index].photo = await loadImage(event, prevImage);
     allPosts.splice(index, 1, allPosts[index]);
-    setStorage("posts", allPosts);
-    renderPosts();
+    setStorage("posts", allPosts)
+      .then(() => {
+        renderPosts();
+        showToast(1, "Photo Uploaded successfully!");
+      })
+      .catch(() => showToast(3, "Failed! LocalStorage has exceeded the maximum size.")
+      );
   }
 });

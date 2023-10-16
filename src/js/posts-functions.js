@@ -1,10 +1,6 @@
-import { el, els, setStorage, getStorage, updateHtml } from "./common-spec.js";
+import { el, els, setStorage, getStorage, updateHtml, showToast } from "./common-spec.js";
 
 import axios from "axios";
-
-import "aos/dist/aos.css";
-import AOS from "aos";
-AOS.init();
 
 let btnValue = 0;
 
@@ -21,9 +17,14 @@ const fetchPosts = () => {
       const posts = response.data;
       setStorage("posts", posts);
       renderPosts();
+      showToast(1,"Posts fetched successfully!");
     })
     .catch((error) => {
-      throw new Error(`HTTP error! Status: ${error}`);
+      const posts = [];
+      setStorage("posts", posts);
+      renderPosts();
+      showToast(3, "Posts fetched failed! " + error.code + ": "+ error);
+      // throw new Error(`HTTP error! Status: ${error}`);
     });
 };
 
@@ -108,5 +109,7 @@ const postContainer = (allProd, selectedNo = 10) => {
       </div>
       `;
 };
+
+// showToast(1,"Posts fetched successfully!")
 
 export { fetchPosts, getPosts, renderPosts, btnValue };
