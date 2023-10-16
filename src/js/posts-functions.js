@@ -44,6 +44,7 @@ const renderPosts = () => {
       btnValue = btn.value;
     });
   });
+  el('#productImagePath').value='';
 };
 
 const createPostCard = function (
@@ -109,7 +110,5 @@ const postContainer = (allProd, selectedNo = 10) => {
       </div>
       `;
 };
-
-// showToast(1,"Posts fetched successfully!")
 
 export { fetchPosts, getPosts, renderPosts, btnValue };
